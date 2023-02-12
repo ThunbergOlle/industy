@@ -73,7 +73,7 @@ fn setup_player(
         })
         .insert(player::Player {})
         .insert(velocity::Velocity { x: 0., y: 0. })
-        .insert(playable_character::PlayableCharacter { isPlayed: true })
+        .insert(playable_character::PlayableCharacter {})
         .insert(tag::Tag("player".to_string()))
         .insert(Name::new("Player"));
 }
