@@ -58,9 +58,36 @@ pub enum TileType {
     Grass,
     Water,
 }
+trait TileTypeTrait {
+    fn to_type_id(&self) -> u32;
+    fn from_type_id(type_id: u32) -> TileType;
+    fn to_sprite_index(&self) -> usize;
+}
+impl TileTypeTrait for TileType {
+    fn from_type_id(type_id: u32) -> TileType {
+        match type_id {
+            0 => TileType::Water,
+            1 => TileType::Grass,
+            _ => TileType::Grass,
+        }
+    }
+    fn to_type_id(&self) -> u32 {
+        match self {
+            TileType::Grass => 1,
+            TileType::Water => 0,
+        }
+    }
+    fn to_sprite_index(&self) -> usize {
+        match self {
+            TileType::Grass => 33,
+            TileType::Water => 27,
+        }
+    }
+}
 fn spawn_tile(commands: &mut Commands, tilemap: &TileMapSheet, tile_type_id: u32, x: u32, y: u32) {
-    let tile_type = tile_type_id_to_tile_type(tile_type_id);
-    let sprite_index = tile_type_to_sprite_index(tile_type);
+    let tile_type = TileType::from_type_id(tile_type_id);
+    let sprite_index = TileType::to_sprite_index(&tile_type);
+
     let sprite = TextureAtlasSprite {
         index: sprite_index,
         ..Default::default()
@@ -80,14 +107,14 @@ fn spawn_tile(commands: &mut Commands, tilemap: &TileMapSheet, tile_type_id: u32
 pub fn tile_type_to_sprite_index(tile_type: TileType) -> usize {
     match tile_type {
         TileType::Grass => 33,
-        TileType::Water => 28,
+        TileType::Water => 27,
         _ => 0,
     }
 }
 pub fn tile_type_id_to_tile_type(tile_type_id: u32) -> TileType {
     match tile_type_id {
-        0 => TileType::Grass,
-        1 => TileType::Water,
+        0 => TileType::Water,
+        1 => TileType::Grass,
         _ => TileType::Grass,
     }
 }
