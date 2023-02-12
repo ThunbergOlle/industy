@@ -10,14 +10,14 @@ mod player;
 mod position;
 #[path = "./components/tag.rs"]
 mod tag;
-#[path = "./plugins/tilemap/tilemap.rs"]
-mod tilemap_plugin;
+#[path = "./plugins/world/world.rs"]
+mod world_plugin;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .add_plugin(player::PlayerPlugin)
         .add_plugin(debug_plugin::DebugPlugin)
-        .add_plugin(tilemap_plugin::TileMapPlugin)
+        .add_plugin(world_plugin::WorldPlugin)
         .add_startup_system(setup_world)
         .run();
 }

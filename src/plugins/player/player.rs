@@ -141,7 +141,7 @@ fn player_velocity_animation(
         frame_duration: 2.,
     };
     let walk_right_animation = Animation {
-        frames: vec![5, 6, 7, 8, 9, 10],
+        frames: vec![4, 5, 6, 7, 8, 9],
         frame_duration: 1.,
     };
     let walk_left_animation = Animation {
