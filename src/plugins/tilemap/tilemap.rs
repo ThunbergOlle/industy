@@ -103,18 +103,3 @@ fn spawn_tile(commands: &mut Commands, tilemap: &TileMapSheet, tile_type_id: u32
         ..Default::default()
     });
 }
-
-pub fn tile_type_to_sprite_index(tile_type: TileType) -> usize {
-    match tile_type {
-        TileType::Grass => 33,
-        TileType::Water => 27,
-        _ => 0,
-    }
-}
-pub fn tile_type_id_to_tile_type(tile_type_id: u32) -> TileType {
-    match tile_type_id {
-        0 => TileType::Water,
-        1 => TileType::Grass,
-        _ => TileType::Grass,
-    }
-}
