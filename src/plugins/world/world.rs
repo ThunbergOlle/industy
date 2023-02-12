@@ -77,6 +77,19 @@ fn create_tile_map(mut commands: Commands, tilemap: Res<TileMapSheet>) {
                     *tile_type_id,
                     x as i32 + x_offset * 8,
                     y as i32 + y_offset * 8 * -1,
+                    0,
+                );
+            }
+        }
+        for (y, row) in chunk.foreground_layer.iter().enumerate() {
+            for (x, tile_type_id) in row.iter().enumerate() {
+                spawn_tile(
+                    &mut commands,
+                    &tilemap,
+                    *tile_type_id,
+                    x as i32 + x_offset * 8,
+                    y as i32 + y_offset * 8 * -1,
+                    10,
                 );
             }
         }
@@ -87,6 +100,7 @@ pub enum TileType {
     Air,
     Grass,
     Water,
+    Flower,
 }
 trait TileTypeTrait {
     fn to_type_id(&self) -> u32;
@@ -99,6 +113,7 @@ impl TileTypeTrait for TileType {
             0 => TileType::Air,
             1 => TileType::Grass,
             2 => TileType::Water,
+            50 => TileType::Flower,
             _ => TileType::Grass,
         }
     }
@@ -107,17 +122,26 @@ impl TileTypeTrait for TileType {
             TileType::Air => 0,
             TileType::Grass => 1,
             TileType::Water => 2,
+            TileType::Flower => 50,
         }
     }
     fn to_sprite_index(&self) -> usize {
         match self {
             TileType::Air => 0,
-            TileType::Grass => 33,
+            TileType::Grass => 23,
             TileType::Water => 27,
+            TileType::Flower => 111,
         }
     }
 }
-fn spawn_tile(commands: &mut Commands, tilemap: &TileMapSheet, tile_type_id: u32, x: i32, y: i32) {
+fn spawn_tile(
+    commands: &mut Commands,
+    tilemap: &TileMapSheet,
+    tile_type_id: u32,
+    x: i32,
+    y: i32,
+    layer: i32,
+) {
     let tile_type = TileType::from_type_id(tile_type_id);
     let sprite_index = TileType::to_sprite_index(&tile_type);
 
@@ -129,7 +153,7 @@ fn spawn_tile(commands: &mut Commands, tilemap: &TileMapSheet, tile_type_id: u32
         texture_atlas: tilemap.0.clone(),
         sprite,
         transform: Transform {
-            translation: Vec3::new((x as f32) * 4. * 16., (y as f32) * 4. * 16., 0.0),
+            translation: Vec3::new((x as f32) * 4. * 16., (y as f32) * 4. * 16., layer as f32),
             scale: Vec3::new(4.0, 4.0, 1.0),
             ..Default::default()
         },
