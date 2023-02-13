@@ -22,7 +22,7 @@ fn main() {
         .run();
 }
 
-fn setup_world(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup_world(mut commands: Commands, _asset_server: Res<AssetServer>) {
     println!("Setting up a game world!");
 
     commands.spawn(Camera2dBundle::default());
