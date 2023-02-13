@@ -4,8 +4,12 @@ Industy is a WIP of a new 2D gamified version of Virtcon. It is a game where you
 
 Fully built using Rust and Bevy.
 
-### Project
+### Run in debug mode
 
 1. Install Rust and Cargo
 2. Clone the repo
-3. Run `cargo run --release` in the root directory
+3. Run `cargo run` in the root directory. You can use `--release` to build in release mode.
+
+### Run in release mode
+
+`cargo run --release`
