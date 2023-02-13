@@ -4,6 +4,8 @@ use bevy::prelude::*;
 mod collider;
 #[path = "./plugins/debug/debug.rs"]
 mod debug_plugin;
+#[path = "./plugins/item/item.rs"]
+mod item_plugin;
 #[path = "./plugins/player/player.rs"]
 mod player;
 #[path = "./components/position.rs"]
@@ -18,6 +20,7 @@ fn main() {
         .add_plugin(player::PlayerPlugin)
         .add_plugin(debug_plugin::DebugPlugin)
         .add_plugin(world_plugin::WorldPlugin)
+        .add_plugin(item_plugin::ItemPlugin)
         .add_startup_system(setup_world)
         .run();
 }
