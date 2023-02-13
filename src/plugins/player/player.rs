@@ -88,22 +88,21 @@ fn player_movement(
 ) {
     for (_head, mut transform, mut velocity) in positions.iter_mut() {
         let mut new_velocity = velocity::Velocity { x: 0., y: 0. };
-        if keyboard_input.pressed(KeyCode::Left) {
-            new_velocity.x = -1.;
-            transform.translation.x += 2. * new_velocity.x;
-        }
-        if keyboard_input.pressed(KeyCode::Right) {
-            new_velocity.x = 1.;
-            transform.translation.x += 2. * new_velocity.x;
-        }
-        if keyboard_input.pressed(KeyCode::Up) {
-            new_velocity.y = 1.;
-            transform.translation.y += 2. * new_velocity.y;
-        }
-        if keyboard_input.pressed(KeyCode::Down) {
-            new_velocity.y = -1.;
-            transform.translation.y += 2. * new_velocity.y;
-        }
+
+        // convert pressed input to integers
+        let left: i32 = keyboard_input.pressed(KeyCode::Left).into();
+        let right: i32 = keyboard_input.pressed(KeyCode::Right).into();
+
+        new_velocity.x = (right-left) as f32; // 0 stationary 1 right -1 left
+
+        // do the same for y axis
+        let up: i32 = keyboard_input.pressed(KeyCode::Up).into();
+        let down: i32 = keyboard_input.pressed(KeyCode::Down).into();
+
+        new_velocity.y = (up-down) as f32; // 0 stationary 1 up -1 down
+
+        transform.translation.x += 2. * new_velocity.x;
+        transform.translation.y += 2. * new_velocity.y;
         *velocity = new_velocity;
     }
 }
