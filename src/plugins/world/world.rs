@@ -65,12 +65,12 @@ fn load_tile_map_resource(
 }
 fn create_tile_map(mut commands: Commands, tilemap: Res<TileMapSheet>, item_sheet: Res<ItemSheet>) {
     let map = load_map_data();
-    let chunk = map.world;
+    let chunk = &map.world;
 
     for chunk in chunk {
         let x_offset = chunk.x;
         let y_offset = chunk.y;
-        let background_layer = chunk.background_layer;
+        let background_layer = &chunk.background_layer;
 
         for (y, row) in background_layer.iter().enumerate() {
             for (x, tile_type_id) in row.iter().enumerate() {
@@ -96,15 +96,17 @@ fn create_tile_map(mut commands: Commands, tilemap: Res<TileMapSheet>, item_shee
                 );
             }
         }
-        // load resource data
-        for resource in chunk.resources {
-            let x = resource.local_x + x_offset * 8;
-            let y = resource.local_y + y_offset * 8 * -1;
-            let item_id = resource.item_id;
-            let uid = resource.uid;
-            resource::spawn_resource(&mut commands, &item_sheet, item_id, x, y, &uid);
-        }
+
+        // // load resource data
+        // for resource in chunk.resources {
+        //     let x = resource.local_x + x_offset * 8;
+        //     let y = resource.local_y + y_offset * 8 * -1;
+        //     let item_id = resource.item_id;
+        //     let uid = resource.uid;
+        //     resource::spawn_resource(&mut commands, &item_sheet, item_id, x, y, &uid);
+        // }
     }
+    resource::spawn_resources(&mut commands, &item_sheet, &map);
 }
 
 pub enum TileType {

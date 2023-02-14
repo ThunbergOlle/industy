@@ -8,8 +8,9 @@ mod item_resource;
 pub struct ItemPlugin;
 
 impl Plugin for ItemPlugin {
-    fn build(&self, app: &mut App) {}
+    fn build(&self, _: &mut App) {}
 }
+#[allow(dead_code)]
 
 pub enum Item {
     Stone,
@@ -21,6 +22,7 @@ pub enum Item {
     NaturalGas,
     Plastic,
 }
+#[allow(dead_code)]
 
 impl Item {
     pub fn to_type_id(&self) -> u32 {

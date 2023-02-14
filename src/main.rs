@@ -1,4 +1,4 @@
-use bevy::{diagnostic::Diagnostics, prelude::*};
+use bevy::prelude::*;
 
 #[path = "./components/collider.rs"]
 mod collider;
@@ -14,6 +14,8 @@ mod player;
 mod position;
 #[path = "./components/tag.rs"]
 mod tag;
+#[path = "./components/uid.rs"]
+mod uid;
 #[path = "./plugins/world/world.rs"]
 mod world_plugin;
 fn main() {
@@ -31,7 +33,7 @@ fn main() {
 #[derive(Component)]
 struct FpsText;
 
-fn setup_world(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup_world(mut commands: Commands) {
     println!("Setting up a game world!");
 
     commands.spawn(Camera2dBundle::default());
