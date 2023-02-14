@@ -1,4 +1,7 @@
-use bevy::prelude::*;
+use bevy::{
+    diagnostic::{Diagnostics, FrameTimeDiagnosticsPlugin},
+    prelude::*,
+};
 
 #[path = "./components/collider.rs"]
 mod collider;
@@ -18,11 +21,16 @@ fn main() {
         .add_plugin(player::PlayerPlugin)
         .add_plugin(debug_plugin::DebugPlugin)
         .add_plugin(world_plugin::WorldPlugin)
+        .add_plugin(FrameTimeDiagnosticsPlugin::default()) // FPS
         .add_startup_system(setup_world)
+        .add_system(text_update_system) // FPS
         .run();
 }
 
-fn setup_world(mut commands: Commands, _asset_server: Res<AssetServer>) {
+#[derive(Component)]
+struct FpsText;
+
+fn setup_world(mut commands: Commands, asset_server: Res<AssetServer>) {
     println!("Setting up a game world!");
 
     commands.spawn(Camera2dBundle::default());
@@ -38,4 +46,36 @@ fn setup_world(mut commands: Commands, _asset_server: Res<AssetServer>) {
     //     })
     //     .insert(tag::Tag("map".to_string()))
     //     .insert(position::Position { x: 0, y: 0 });
+
+    
+    // Show FPS
+    commands.spawn((
+        TextBundle::from_sections([
+            TextSection::new(
+                "FPS: ",
+                TextStyle {
+                    font: asset_server.load("fonts/FiraMono-Regular.ttf"),
+                    font_size: 60.0,
+                    color: Color::WHITE,
+                },
+            ),
+            TextSection::from_style(TextStyle {
+                font: asset_server.load("fonts/FiraMono-Medium.ttf"),
+                font_size: 60.0,
+                color: Color::GOLD,
+            }),
+        ]),
+        FpsText,
+    ));
+}
+
+fn text_update_system(diagnostics: Res<Diagnostics>, mut query: Query<&mut Text, With<FpsText>>) {
+    for mut text in &mut query {
+        if let Some(fps) = diagnostics.get(FrameTimeDiagnosticsPlugin::FPS) {
+            if let Some(value) = fps.smoothed() {
+                // Update the value of the second section
+                text.sections[1].value = format!("{value:.2}");
+            }
+        }
+    }
 }
