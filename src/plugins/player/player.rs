@@ -1,3 +1,5 @@
+use crate::player_component::{self, Player};
+
 use bevy::{
     prelude::{
         default, App, AssetServer, Assets, Camera2d, Commands, Component, Handle, Input,
@@ -11,8 +13,7 @@ use bevy::{
 mod collider;
 #[path = "../../components/playable_character.rs"]
 mod playable_character;
-#[path = "../../components/player.rs"]
-mod player;
+
 #[path = "../../components/tag.rs"]
 mod tag;
 #[path = "../../components/velocity.rs"]
@@ -71,7 +72,7 @@ fn setup_player(
             width: 24.,
             height: 24.,
         })
-        .insert(player::Player {})
+        .insert(player_component::Player { inventory: vec![] })
         .insert(velocity::Velocity { x: 0., y: 0. })
         .insert(playable_character::PlayableCharacter {})
         .insert(tag::Tag("player".to_string()))
@@ -93,13 +94,13 @@ fn player_movement(
         let left: i32 = keyboard_input.pressed(KeyCode::Left).into();
         let right: i32 = keyboard_input.pressed(KeyCode::Right).into();
 
-        new_velocity.x = (right-left) as f32; // 0 stationary 1 right -1 left
+        new_velocity.x = (right - left) as f32; // 0 stationary 1 right -1 left
 
         // do the same for y axis
         let up: i32 = keyboard_input.pressed(KeyCode::Up).into();
         let down: i32 = keyboard_input.pressed(KeyCode::Down).into();
 
-        new_velocity.y = (up-down) as f32; // 0 stationary 1 up -1 down
+        new_velocity.y = (up - down) as f32; // 0 stationary 1 up -1 down
 
         transform.translation.x += 2. * new_velocity.x;
         transform.translation.y += 2. * new_velocity.y;
@@ -132,7 +133,7 @@ fn player_velocity_animation(
         &mut AnimationComponent,
         &mut TextureAtlasSprite,
         &velocity::Velocity,
-        With<player::Player>,
+        With<player_component::Player>,
     )>,
 ) {
     let idle_animation = Animation {

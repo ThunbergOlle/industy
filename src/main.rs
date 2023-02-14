@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{input::mouse::MouseButtonInput, prelude::*};
 
 #[path = "./components/collider.rs"]
 mod collider;
@@ -10,6 +10,8 @@ mod item_plugin;
 mod item_resource;
 #[path = "./plugins/player/player.rs"]
 mod player;
+#[path = "./components/player.rs"]
+mod player_component;
 #[path = "./components/position.rs"]
 mod position;
 #[path = "./components/tag.rs"]
@@ -26,6 +28,7 @@ fn main() {
         .add_plugin(item_plugin::ItemPlugin)
         .add_plugin(world_plugin::WorldPlugin)
         .add_startup_system(setup_world)
+        .add_system(handle_mouse_clicks)
         .add_startup_system_to_stage(StartupStage::PreStartup, load_item_resource)
         .run();
 }
@@ -37,18 +40,6 @@ fn setup_world(mut commands: Commands) {
     println!("Setting up a game world!");
 
     commands.spawn(Camera2dBundle::default());
-    // commands
-    //     .spawn(SpriteBundle {
-    //         texture: asset_server.load("map.png").into(),
-    //         transform: Transform {
-    //             translation: Vec3::new(0.0, 0.0, 0.0),
-    //             scale: Vec3::new(4.0, 4.0, 1.0),
-    //             ..Default::default()
-    //         },
-    //         ..Default::default()
-    //     })
-    //     .insert(tag::Tag("map".to_string()))
-    //     .insert(position::Position { x: 0, y: 0 });
 }
 
 // load the resource sheet as a resource

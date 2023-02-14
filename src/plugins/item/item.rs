@@ -1,6 +1,10 @@
 use std::fmt::Error;
 
-use bevy::prelude::{App, Plugin};
+use bevy::{
+    ecs::query::WorldQuery,
+    prelude::{App, Plugin},
+    reflect::{FromReflect, Reflect},
+};
 
 #[path = "../../resources/item_sheet.rs"]
 mod item_resource;
@@ -10,8 +14,8 @@ pub struct ItemPlugin;
 impl Plugin for ItemPlugin {
     fn build(&self, _: &mut App) {}
 }
-#[allow(dead_code)]
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Reflect, FromReflect)]
 pub enum Item {
     Stone,
     Wood,
@@ -22,8 +26,8 @@ pub enum Item {
     NaturalGas,
     Plastic,
 }
-#[allow(dead_code)]
 
+#[allow(dead_code)]
 impl Item {
     pub fn to_type_id(&self) -> u32 {
         match self {
