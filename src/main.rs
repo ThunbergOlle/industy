@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{diagnostic::Diagnostics, prelude::*};
 
 #[path = "./components/collider.rs"]
 mod collider;
@@ -19,16 +19,19 @@ mod world_plugin;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
-        .add_startup_system(setup_world)
-        .add_startup_system_to_stage(StartupStage::PreStartup, load_item_resource)
         .add_plugin(player::PlayerPlugin)
         .add_plugin(debug_plugin::DebugPlugin)
         .add_plugin(item_plugin::ItemPlugin)
         .add_plugin(world_plugin::WorldPlugin)
+        .add_startup_system(setup_world)
+        .add_startup_system_to_stage(StartupStage::PreStartup, load_item_resource)
         .run();
 }
 
-fn setup_world(mut commands: Commands, _asset_server: Res<AssetServer>) {
+#[derive(Component)]
+struct FpsText;
+
+fn setup_world(mut commands: Commands, asset_server: Res<AssetServer>) {
     println!("Setting up a game world!");
 
     commands.spawn(Camera2dBundle::default());
