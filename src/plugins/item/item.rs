@@ -1,7 +1,6 @@
-use bevy::{
-    prelude::{App, AssetServer, Assets, Commands, Plugin, Res, ResMut, StartupStage, Vec2},
-    sprite::TextureAtlas,
-};
+use std::fmt::Error;
+
+use bevy::prelude::{App, Plugin};
 
 #[path = "../../resources/item_sheet.rs"]
 mod item_resource;
@@ -9,18 +8,56 @@ mod item_resource;
 pub struct ItemPlugin;
 
 impl Plugin for ItemPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_startup_system_to_stage(StartupStage::PreStartup, load_item_resource);
-    }
+    fn build(&self, app: &mut App) {}
 }
-// load the resource sheet as a resource
-fn load_item_resource(
-    mut commands: Commands,
-    assets: Res<AssetServer>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-) {
-    let image = assets.load("itemsheet.png");
-    let texture_atlas = TextureAtlas::from_grid(image, Vec2::splat(16.), 8, 8, None, None);
-    let texture_atlas_handle = texture_atlases.add(texture_atlas);
-    commands.insert_resource(item_resource::ItemSheet(texture_atlas_handle));
+
+pub enum Item {
+    Stone,
+    Wood,
+    Sand,
+    Gold,
+    Lithium,
+    Oil,
+    NaturalGas,
+    Plastic,
+}
+
+impl Item {
+    pub fn to_type_id(&self) -> u32 {
+        match self {
+            Item::Stone => 0,
+            Item::Wood => 1,
+            Item::Sand => 2,
+            Item::Gold => 3,
+            Item::Lithium => 4,
+            Item::Oil => 5,
+            Item::NaturalGas => 6,
+            Item::Plastic => 7,
+        }
+    }
+    pub fn from_type_id(id: u32) -> Result<Item, Error> {
+        match id {
+            0 => Ok(Item::Stone),
+            1 => Ok(Item::Wood),
+            2 => Ok(Item::Sand),
+            3 => Ok(Item::Gold),
+            4 => Ok(Item::Lithium),
+            5 => Ok(Item::Oil),
+            6 => Ok(Item::NaturalGas),
+            7 => Ok(Item::Plastic),
+            _ => Err(Error),
+        }
+    }
+    pub fn to_sprite_index(&self) -> usize {
+        match self {
+            Item::Stone => 0,
+            Item::Wood => 1,
+            Item::Sand => 2,
+            Item::Gold => 3,
+            Item::Lithium => 4,
+            Item::Oil => 5,
+            Item::NaturalGas => 6,
+            Item::Plastic => 7,
+        }
+    }
 }

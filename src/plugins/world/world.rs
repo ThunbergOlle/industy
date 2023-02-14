@@ -1,5 +1,6 @@
 use std::fs::File;
 
+use crate::item_resource::ItemSheet;
 use bevy::{
     prelude::{
         App, AssetServer, Assets, Commands, Handle, Plugin, Res, ResMut, Resource, StartupStage,
@@ -8,6 +9,8 @@ use bevy::{
     sprite::{SpriteSheetBundle, TextureAtlas, TextureAtlasSprite},
 };
 use serde::{Deserialize, Serialize};
+
+mod resource;
 
 pub struct WorldPlugin;
 
@@ -21,13 +24,13 @@ impl Plugin for WorldPlugin {
 pub struct TileMapSheet(Handle<TextureAtlas>);
 
 #[derive(Serialize, Deserialize, Debug)]
-struct TileMapJSON {
-    world: Vec<Chunk>,
-    name: String,
+pub struct TileMapJSON {
+    pub world: Vec<Chunk>,
+    pub name: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Chunk {
+pub struct Chunk {
     x: i32,
     y: i32,
     background_layer: Vec<Vec<u32>>,
@@ -36,7 +39,7 @@ struct Chunk {
 }
 #[derive(Serialize, Deserialize, Debug)]
 struct ItemResource {
-    item_type: String,
+    item_id: u32,
     uid: String,
     local_y: i32,
     local_x: i32,
@@ -60,7 +63,7 @@ fn load_tile_map_resource(
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
     commands.insert_resource(TileMapSheet(texture_atlas_handle));
 }
-fn create_tile_map(mut commands: Commands, tilemap: Res<TileMapSheet>) {
+fn create_tile_map(mut commands: Commands, tilemap: Res<TileMapSheet>, item_sheet: Res<ItemSheet>) {
     let map = load_map_data();
     let chunk = map.world;
 
@@ -92,6 +95,14 @@ fn create_tile_map(mut commands: Commands, tilemap: Res<TileMapSheet>) {
                     10,
                 );
             }
+        }
+        // load resource data
+        for resource in chunk.resources {
+            let x = resource.local_x + x_offset * 8;
+            let y = resource.local_y + y_offset * 8 * -1;
+            let item_id = resource.item_id;
+            let uid = resource.uid;
+            resource::spawn_resource(&mut commands, &item_sheet, item_id, x, y, &uid);
         }
     }
 }
