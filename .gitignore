@@ -16,3 +16,5 @@ Cargo.lock
 
 # remove .vscode folder because it is uneeded for anyone without Visual Studio Code
 .vscode/
+
+.DS_Store
