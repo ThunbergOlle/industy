@@ -1,5 +1,5 @@
-use bevy::prelude::Component;
-#[derive(Component, Clone, Copy, PartialEq, Eq, Reflect)]
+use bevy::{ecs::query::WorldQuery, prelude::Component, reflect::Reflect};
+#[derive(Component, Clone, PartialEq, Eq, Reflect, Debug)]
 pub struct Resource {
     pub local_x: i32,
     pub local_y: i32,

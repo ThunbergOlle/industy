@@ -1,4 +1,5 @@
-use bevy::{input::mouse::MouseButtonInput, prelude::*};
+use bevy::prelude::*;
+use bevy_mod_raycast::RaycastSource;
 
 #[path = "./components/collider.rs"]
 mod collider;
@@ -14,6 +15,10 @@ mod player;
 mod player_component;
 #[path = "./components/position.rs"]
 mod position;
+#[path = "./plugins/raycast/raycast.rs"]
+mod raycast_plugin;
+#[path = "./components/resource.rs"]
+mod resource_component;
 #[path = "./components/tag.rs"]
 mod tag;
 #[path = "./components/uid.rs"]
@@ -23,12 +28,12 @@ mod world_plugin;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
+        .add_plugin(raycast_plugin::RayCastPlugin)
         .add_plugin(player::PlayerPlugin)
         .add_plugin(debug_plugin::DebugPlugin)
         .add_plugin(item_plugin::ItemPlugin)
         .add_plugin(world_plugin::WorldPlugin)
         .add_startup_system(setup_world)
-        .add_system(handle_mouse_clicks)
         .add_startup_system_to_stage(StartupStage::PreStartup, load_item_resource)
         .run();
 }
@@ -39,7 +44,9 @@ struct FpsText;
 fn setup_world(mut commands: Commands) {
     println!("Setting up a game world!");
 
-    commands.spawn(Camera2dBundle::default());
+    commands
+        .spawn(Camera2dBundle::default())
+        .insert(RaycastSource::<raycast_plugin::ClickableRayCast>::new());
 }
 
 // load the resource sheet as a resource

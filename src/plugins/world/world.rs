@@ -3,10 +3,10 @@ use std::fs::File;
 use crate::item_resource::ItemSheet;
 use bevy::{
     prelude::{
-        App, AssetServer, Assets, Commands, Handle, Plugin, Res, ResMut, Resource, StartupStage,
-        Transform, Vec2, Vec3,
+        App, AssetServer, Assets, Commands, Handle, Mesh, Plugin, Res, ResMut, Resource,
+        StartupStage, Transform, Vec2, Vec3,
     },
-    sprite::{SpriteSheetBundle, TextureAtlas, TextureAtlasSprite},
+    sprite::{ColorMaterial, SpriteSheetBundle, TextureAtlas, TextureAtlasSprite},
 };
 use serde::{Deserialize, Serialize};
 
@@ -63,7 +63,13 @@ fn load_tile_map_resource(
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
     commands.insert_resource(TileMapSheet(texture_atlas_handle));
 }
-fn create_tile_map(mut commands: Commands, tilemap: Res<TileMapSheet>, item_sheet: Res<ItemSheet>) {
+fn create_tile_map(
+    mut commands: Commands,
+    tilemap: Res<TileMapSheet>,
+    item_sheet: Res<ItemSheet>,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
+) {
     let map = load_map_data();
     let chunk = &map.world;
 
@@ -106,7 +112,13 @@ fn create_tile_map(mut commands: Commands, tilemap: Res<TileMapSheet>, item_shee
         //     resource::spawn_resource(&mut commands, &item_sheet, item_id, x, y, &uid);
         // }
     }
-    resource::spawn_resources(&mut commands, &item_sheet, &map);
+    resource::spawn_resources(
+        &mut commands,
+        &item_sheet,
+        &mut meshes,
+        &mut materials,
+        &map,
+    );
 }
 
 pub enum TileType {

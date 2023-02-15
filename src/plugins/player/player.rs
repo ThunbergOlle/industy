@@ -1,4 +1,4 @@
-use crate::player_component::{self, Player};
+use crate::player_component::{self};
 
 use bevy::{
     prelude::{
