@@ -50,7 +50,7 @@ fn text_update_system(diagnostics: Res<Diagnostics>, mut query: Query<&mut Text,
         if let Some(fps) = diagnostics.get(FrameTimeDiagnosticsPlugin::FPS) {
             if let Some(value) = fps.smoothed() {
                 // Update the value of the second section
-                text.sections[1].value = format!("{value:.2}");
+                text.sections[1].value = format!("{value:.0}");
             }
         }
     }
